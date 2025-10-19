@@ -1,0 +1,99 @@
+Hunting For IDORs
+1-create 2 accounts:
+If users can have 
+different permissions on the site, create two accounts for each permission 
+level
+For example, create two admin accounts, two regular user accounts,two group member accounts, and two non-group-member accounts
+
+For example the messages page in the 2 Accounts 
+https://example.com/messages?user_id=1235 (Attacker)
+https://example.com/messages?user_id=1236 (Victim)
+
+2-Discover Features:
+-try to discover as many application features as possible, looking for application features to test.
+
+Here are some features that might have IDORs on example.com:
+This endpoint lets you read user messages:https://example.com/messages?user_id=1236
+This one lets you read user files:https://example.com/uploads?file=user1236-01.jpeg
+This endpoint deletes user messages:
+POST /delete_message
+message_id=user1236-0111
+This one is for accessing group files: https://example.com/group_files?group=group3
+This one deletes a group: 
+POST /delete_group
+group=group3
+
+3-Capture Requests:
+-Browse through each application feature you mapped in the preceding step 
+and capture all the requests 
+-Inspect.
+each request carefully and find the parameters that contain numbers, user
+names, or IDs. Remember that you can trigger IDORs from different locations 
+within a request.
+- Also, note that APIs like Representational State Transfer (REST) and 
+GraphQL are often found to be vulnerable to IDOR too.
+
+4-Change the IDs
+-Switch the IDs in the sensitive requests and check if the information 
+returned also changes.
+--------------------------------------------
+Bypassing IDOR Protection:
+-IDORs aren’t always as simple as switching out a numeric ID.
+
+1-Encoded IDs and Hashed ID
+When faced with a seemingly random string, always suspect that it is encoded and try to decode it.
+For example, take a look at the IDs of this endpoint:
+https://example.com/messages?user_id=MTIzNQ
+https://example.com/messages?user_id=MTIzNg
+-These user_ids are just the base64url-encoded version of a user’s ID. 
+MTIzNQ is the base64url-encoded string of 1235, and MTIzNg is the encoded version of 1236.
+-You can simply encode your false IDs by using an online base64url encoder and executing the IDOR.
+
+
+2-Offer the Application an ID, Even If It Doesn’t Ask for One
+-In modern web applications, you’ll commonly encounter scenarios in which the application uses cookies instead of IDs to identify the resources a user can access.
+-For example, when you send the following GET request to an endpoint, the application will deduce your identity based on your session cookie, and then send you the messages associated with that user:
+GET /api_v1/messages
+Host: example.com
+Cookies: session=YOUR_SESSION_COOKIE
+-If no IDs exist in the application-generated request, try adding one to the request. Append id, user_id, message_id, or other object references to the URL query.
+For example, say this request displays your messages:
+GET /api_v1/messages
+-Then maybe this request would display another user’s messages instead:
+GET /api_v1/messages?user_id=ANOTHER_USERS_ID
+
+
+3-Keep an Eye Out for Blind IDORs
+-Sometimes endpoints susceptible to IDOR don’t respond with the 
+leaked information directly , They might lead the application to leak information elsewhere, instead: in export files, email
+-Imagine that this endpoint on example.com allows users 
+to email themselves a copy of a receipt
+ POST /get_receipt
+ (POST request body)
+ receipt_id=3001
+-What if you were to request a receipt that belongs to 
+another user, receipt 2983?
+ POST /get_receipt
+ (POST request body)
+ receipt_id=2983
+
+
+4- Change the Request Method
+-If this GET request is not vulner
+able to IDOR and doesn’t return another user’s resources
+ GET example.com/uploads/user1236-01.jpeg
+-You can try to use the DELETE method to delete the resource instead. The 
+DELETE method removes the resource from the target URL:
+ DELETE example.com/uploads/user1236-01.jpeg
+-If POST requests don’t work, you can also try to update another user’s 
+resource by using the PUT method. The PUT method updates or creates 
+the resource at the target URL:
+ PUT example.com/uploads/user1236-01.jpeg
+ (PUT request body)
+ NEW_FILE
+
+5- Change the Requested File Type
+- If this request is blocked by the server
+ GET /get_receipt?receipt_id=2983
+ then try this one instead:
+ GET /get_receipt?receipt_id=2983.json

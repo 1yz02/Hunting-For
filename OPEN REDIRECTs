@@ -1,0 +1,38 @@
+Hunting For OPEN REDIRECTS :
+
+1- Look for Redirect Parameters
+- Start by searching for the parameters used for redirects. These often show up as URL parameters like the ones in bold here:
+https://example.com/login?redirect=https://example.com/dashboard
+https://example.com/login?redir=https://example.com/dashboard
+https://example.com/login?next=https://example.com/dashboard
+https://example.com/login?next=/dashboard
+
+2- Use Google Dorks to Find Additional Redirect Parameters
+- The following searches for URL parameters that contain absolute URLs:
+inurl:%3Dhttp site:example.com
+- The following search term searches URLs that contain =/, and therefore returns URL parameters that contain relative URLs:
+inurl:%3D%2F site:example.com
+
+3- Here are a few search terms that will likely reveal parameters used for a redirect:
+inurl:redir site:example.com
+inurl:redirect site:example.com
+inurl:redirecturi site:example.com
+inurl:redirect_uri site:example.com
+inurl:redirecturl site:example.com
+inurl:redirect_uri site:example.com
+inurl:return site:example.com
+inurl:returnurl site:example.com
+inurl:relaystate site:example.com
+inurl:forward site:example.com
+inurl:forwardurl site:example.com
+inurl:forward_url site:example.com
+inurl:url site:example.com
+inurl:uri site:example.com
+inurl:dest site:example.com
+inurl:destination site:example.com
+inurl:next site:example.com
+
+3- Test for Parameter-Based Open Redirects
+- Insert a random hostname, or a hostname you own, into the redirect parameters; then see if the site automatically redirects to the site you specified:
+https://example.com/login?n=http://google.com
+https://example.com/login?n=http://attacker.com

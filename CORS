@@ -1,0 +1,15 @@
+Hunting For CORS vulnerabilities :
+
+1- Maping the application 
+- Walk through all the pages on the application 
+- See if there is a CORS headers used by the application 
+
+2- Test the applicationfor dynamic generation 
+- Does it reflect the uder-supplied ACAO header "Access Control Allow Origin" ?
+->> Change The origin header and see if it reflected back to you 
+- Does it only validate on the start/end of a specific string ? 
+->> Add a few letters to the begining of the string and see if server accepts it
+- Does it allow the null Origin ?
+- Does it restrict the protocol ?
+->> If the application uses https make it http and see if it allows
+- Does it allow credentials ?

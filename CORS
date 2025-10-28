@@ -6,10 +6,15 @@ Hunting For CORS vulnerabilities :
 
 2- Test the applicationfor dynamic generation 
 - Does it reflect the uder-supplied ACAO header "Access Control Allow Origin" ?
-->> Change The origin header and see if it reflected back to you 
+->> Change The origin header and see if it reflected back to you "Origin: attacker.com"
+
 - Does it only validate on the start/end of a specific string ? 
-->> Add a few letters to the begining of the string and see if server accepts it
+->> Add a few letters to the begining of the string and see if server allows it
+
 - Does it allow the null Origin ?
-- Does it restrict the protocol ?
-->> If the application uses https make it http and see if it allows
-- Does it allow credentials ?
+->> Origin: null
+
+- If the application uses https make it http and see if it allows . 
+
+- Test whether the site properly validates the origin URL by submitting an Origin header that contains an allowed site :
+Origin: www.example.com.attacker.com

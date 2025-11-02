@@ -1,0 +1,21 @@
+Hunting for Template Injection
+
+1- Look for User-Input Locations
+-Look for locations where you can submit user input to the application. 
+These include URL paths, parameters, fragments, HTTP request headers 
+and body, file uploads, and more.
+
+2- Detect Template Injection by Submitting Test Payloads
+- Detect template injection vulnerabilities by injecting a test string into 
+the input fields you identified in the previous step.
+-You can use 
+->>  {{1+abcxx}}${1+abcxx}<%1+abcxx%>[abcxx]
+->>  ${...} for FreeMarker and Thymeleaf Java templates
+->>  {{...}} is the syntax for expressions in PHP templates such as Smarty or Twig  and Python 
+templates like Jinja2
+->>  <%= ... %> is the syntax for the Embedded Ruby template (ERB)
+
+-  Try providing these test payloads to the input fields ${7*7}, {{7*7}}, and <%= 7*7 %>
+-  If any of the returned responses contain the result of the expression, 49, it means that the data is being interpreted as code by the template engine
+GET /display_name?name={{7*7}}
+ Host: example.com

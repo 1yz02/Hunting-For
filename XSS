@@ -81,9 +81,3 @@ Summary :
  4. If you can’t get any payloads to execute, try bypassing XSS protections.
  5. Consider the impact of the XSS you’ve found: who does it target? How many users can it affect? And what can you achieve with it? Can you escalate the attack by using what you’ve found?
  7. Send your XSS report to a bug bounty program!
-
-
-
-
-
- 

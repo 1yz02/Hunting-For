@@ -1,0 +1,31 @@
+Hunting for Information Disclosure
+
+1- Attempt a Path Traversal Attack
+- Let’s say a website allows you to load an image in the application’s image folder by using a relative URL 
+https://example.com/image?url=/images/1.png -->  https://example.com/image?url=/images/../../../../../../../etc/shadow
+- Use encoded variations of ../, such as %2e%2e%2f (URL encoding), %252e%252e%255f (double URL encoding), and ..%2f (partial URL encoding).
+
+2- Search the Wayback Machine
+- Another way to find exposed files is by using the Wayback Machine
+- Add a /* to this URL to get the archived URLs related to the domain as a list. For example, https://web.archive.org/web/*/example.com/* will return a list of URLs related to example.com. You should see the URLs displayed on the Wayback Machine web page
+- You can then use the search function to see whether any sensitive pages have been archived. For example, to look for admin pages, search for the term /admin in the found URLs 
+- You can also search for backup files and configuration files by using common file extensions like .conf and .env, or look for source code, like JavaScript or PHP files, by using the file extensions .js and .php
+
+3- Find Information in Public Files
+- HTML and JavaScript source code. JavaScript files are a rich source of information leaks!
+- Click View page source. You should see the HTML source code of the current page. Follow the links on this page to find other HTML files and JavaScript files the application is using.
+- On the HTML file and the JavaScript files found, grep every page for hardcoded credentials, API keys, and personal information with keywords like password and api_key.
+- You can also locate JavaScript files on a site by using tools like LinkFinder --> (https://github.com/GerbenJavado/LinkFinder/).
+
+4- Use Dorking
+- Github Dorking (https://mr-koanti.github.io/github.html)
+- Shodan Dorking (https://mr-koanti.github.io/shodan)
+- Goole Dorking (https://taksec.github.io/google-dorks-bug-bounty/)
+- Bug Bounty Helper (https://dorks.faisalahmed.me/)
+
+Summary To Hunt :
+1- Look for software version numbers and configuration information by using the recon techniques .
+2- Start searching for exposed configuration files, database files, and other sensitive files uploaded to the production server that aren’t protected properly. Techniques you can use include path traversal, scraping the Wayback Machine or paste dump sites, and looking for files in exposed .git directories.
+3- Find information in the application’s public files, such as its HTML and JavaScript source code, by grepping the file with keywords.
+4- Consider the impact of the information you find before reporting it, and explore ways to escalate its impact.
+5- Draft your first information disclosure report and send it over to the bug bounty program!

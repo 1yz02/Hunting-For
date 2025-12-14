@@ -1,0 +1,18 @@
+Hunting For Response Manipulation Bugs :
+
+- Response Manipulation is a security testing technique where attacker modifies the server's response before it is processed by the client using Web Proxies like BurbSuite .
+
+How It Works And Where Can You Use It :
+
+--> Roles
+- IsAdmin : false >> Manipulating >> IsAdmin : true 
+
+--> Prices 
+- Price : 200 >> Manipulating >> Price : 1 
+
+--> Authentication Bypass 
+- isAuthenticated : false >> Manipulating >> isAuthenticated : true
+
+--> Somewhere in the website you can't enter 
+- 403 Forbidden >> Manipulating >> 200 OK 
+ 
